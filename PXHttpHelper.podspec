@@ -4,14 +4,14 @@ Pod::Spec.new do |s|
   s.version      = "1.0.0"
   s.summary      = "带缓存的网络请求"
 
-  s.homepage     = "http://github.com/DemonArrow/PXHttpHelper"
+  s.homepage     = "http://github.com/DemonArrow/PXHttpHelper.git"
   s.license      = { :type => "MIT", :file => "LICENSE" }
 
   s.author       = { "DemonArrow" => "qipengxiang1990@163.com" }
   s.platform     = :ios, "7.0"
   s.source       = { :git => "https://github.com/DemonArrow/PXHttpHelper.git", :tag => "#{s.version}" }
 
-  s.source_files  = "PXHttpHelperDemo/PXNetHelper/*.{h,m}"
+  s.source_files  = "PXNetHelperDemo/PXNetHelper/*.{h,m}"
   s.dependency 'AFNetworking', '~> 3.2.0'
   s.requires_arc = true
 
