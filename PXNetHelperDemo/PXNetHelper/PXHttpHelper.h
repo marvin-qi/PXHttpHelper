@@ -135,6 +135,13 @@ typedef void(^failure)(NSError *error);
  */
 + (void)px_cancelTask:(NSString *)URLString;
 
+/**
+ 设置请求头
+ 
+ @param key 头的key
+ @param value 头的value
+ */
++ (void)px_setHeadForRequest:(NSString *)key value:(NSString *)value;
 
 @end
 

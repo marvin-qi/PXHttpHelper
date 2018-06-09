@@ -19,35 +19,37 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    //打开打印
-    [PXHttpHelper px_OpenLog:YES];
     //关闭打印
     [PXHttpHelper px_OpenLog:NO];
+    //打开打印
+    [PXHttpHelper px_OpenLog:YES];
     //监听网络
     [PXHttpHelper px_currentNetWorkStatus:^(PXNetWorkStatus status) {
         
     }];
+    
     //无缓存GET请求
     [PXHttpHelper px_getWithURLString:@"" params:nil success:^(id responseObject) {
         //data转换json
-        responseObject = responseObject?[NSJSONSerialization JSONObjectWithData:responseObject options:0 error:nil]:nil;
         NSLog(@"%@",responseObject);
     } failure:^(NSError *error) {
-        
+
     }];
-    
+
     //有缓存GET请求
     [PXHttpHelper px_getWithURLString:@"" params:@{@"key":@"value"} cache:^(id cacheObject) {
-        
+
     } success:^(id responseObject) {
-        
+
     } failure:^(NSError *error) {
-        
+
     }];
     
     //无缓存POST请求
-    [PXHttpHelper px_postWithURLString:@"" params:@{@"key":@"value"} success:^(id responseObject) {
-        
+    [PXHttpHelper px_postWithURLString:@"http://vn.demo.joels.cc/app/login/gettoken" params:nil success:^(id responseObject) {
+        [PXHttpHelper px_postWithURLString:@"http://vn.demo.joels.cc/app/Home/goodsList" params:@{@"id":@(0),@"token":@"A180AE068450CFE8FC3FC26E24226F5B"} success:^(id res) {
+            
+        } failure:nil];
     } failure:^(NSError *error) {
         
     }];
@@ -58,9 +60,9 @@
     } success:^(id responseObject) {
         //
     } failure:^(NSError *error) {
-        
+
     }];
-    
+
     //上传图片
     [PXHttpHelper px_uploadWithURLString:@"" params:@{@"key":@"value"} keyName:@"" images:@[[UIImage imageNamed:@"res_img_poi_logo_default@2x"]] names:@[@"meituan"] progress:^(NSProgress *progress) {
 

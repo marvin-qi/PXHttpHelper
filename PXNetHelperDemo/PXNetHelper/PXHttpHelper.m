@@ -30,8 +30,9 @@ static NSMutableArray <NSURLSessionTask *> *mTaskSource;
 #pragma mark =====================初始化manager========================
 + (void)initialize{
     manager = [AFHTTPSessionManager manager];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.requestSerializer  = [AFJSONRequestSerializer serializer];
     manager.requestSerializer.timeoutInterval = 10.f;
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html", @"text/json", @"text/plain", @"text/javascript", @"text/xml", @"image/*", nil];
     // 打开状态栏的等待菊花
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -67,9 +68,11 @@ static NSMutableArray <NSURLSessionTask *> *mTaskSource;
 #pragma mark =====================有缓存的post请求========================
 + (NSURLSessionTask *)px_postWithURLString:(NSString *)URLString params:(NSDictionary *)params cache:(cache)cache success:(success)success failure:(failure)failure{
     NSString *key = [self getCacheKeyWithURLString:URLString params:params];
-    id cacheObject = [[PXCache getInstance] px_readObjectWithKey:key];
-    if (cache) cache(cacheObject);
-    if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,cacheObject);
+    if (cache) {
+        id cacheObject = [[PXCache getInstance] px_readObjectWithKey:key];
+        cache(cacheObject);
+        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,cacheObject);
+    }
     NSURLSessionTask *sessionTask = [manager POST:URLString parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [mTaskSource removeObject:task];
         if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,responseObject);
@@ -78,7 +81,7 @@ static NSMutableArray <NSURLSessionTask *> *mTaskSource;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         [mTaskSource removeObject:task];
-        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,error);
+        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nerror = %@",URLString,params,error);
         failure?failure(error):nil;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }];
@@ -89,9 +92,11 @@ static NSMutableArray <NSURLSessionTask *> *mTaskSource;
 #pragma mark =====================有缓存的get请求========================
 + (NSURLSessionTask *)px_getWithURLString:(NSString *)URLString params:(NSDictionary *)params cache:(cache)cache success:(success)success failure:(failure)failure{
     NSString *key = [self getCacheKeyWithURLString:URLString params:params];
-    id cacheObject = [[PXCache getInstance] px_readObjectWithKey:key];
-    if (cache) cache(cacheObject);
-    if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,cacheObject);
+    if (cache) {
+        id cacheObject = [[PXCache getInstance] px_readObjectWithKey:key];
+        cache(cacheObject);
+        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,cacheObject);
+    }
     NSURLSessionTask *sessionTask = [manager GET:URLString parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [mTaskSource removeObject:task];
         if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,responseObject);
@@ -100,7 +105,7 @@ static NSMutableArray <NSURLSessionTask *> *mTaskSource;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         [mTaskSource removeObject:task];
-        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,error);
+        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nerror = %@",URLString,params,error);
         failure?failure(error):nil;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }];
@@ -139,12 +144,12 @@ static NSMutableArray <NSURLSessionTask *> *mTaskSource;
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [mTaskSource removeObject:task];
         responseObject = responseObject?[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:nil]:nil;
+        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,responseObject);
         success?success(responseObject):nil;
-        if (isLog) PXNetLog(@"%@",responseObject);
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         [mTaskSource removeObject:task];
-        if (isLog) PXNetLog(@"%@",error);
+        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nerror = %@",URLString,params,error);
         failure?failure(error):nil;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }];
@@ -180,6 +185,11 @@ static NSMutableArray <NSURLSessionTask *> *mTaskSource;
             }];
         }
     }
+}
+
+#pragma mark =====================设置请求头========================
++ (void)px_setHeadForRequest:(NSString *)key value:(NSString *)value{
+    [manager.requestSerializer setValue:value forHTTPHeaderField:key];
 }
 
 + (NSMutableArray *)mTaskSource{
