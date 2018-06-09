@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.version      = "1.0.1"
   s.summary      = "带缓存的网络请求"
 
-  s.homepage     = "http://github.com/DemonArrow/PXHttpHelper"
+  s.homepage     = "http://github.com/DemonArrow/PXHttpHelper.git"
   s.license      = { :type => "MIT", :file => "LICENSE" }
 
   s.author       = { "DemonArrow" => "qipengxiang1990@163.com" }
