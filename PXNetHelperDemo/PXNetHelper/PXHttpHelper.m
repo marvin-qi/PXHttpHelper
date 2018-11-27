@@ -19,7 +19,7 @@
 
 static BOOL isLog = YES;
 static AFHTTPSessionManager *manager;
-static NSMutableArray <NSURLSessionTask *> *mTaskSource;
+static NSMutableArray <NSURLSessionDataTask *> *mTaskSource;
 
 #pragma mark =====================启动========================
 + (void)load{
@@ -56,24 +56,24 @@ static NSMutableArray <NSURLSessionTask *> *mTaskSource;
 }
 
 #pragma mark =====================无缓存的post请求========================
-+ (NSURLSessionTask *)px_postWithURLString:(NSString *)URLString params:(NSDictionary *)params success:(success)success failure:(failure)failure{
++ (NSURLSessionDataTask *)px_postWithURLString:(NSString *)URLString params:(NSDictionary *)params success:(success)success failure:(failure)failure{
     return [self px_postWithURLString:URLString params:params cache:nil success:success failure:failure];
 }
 
 #pragma mark =====================无缓存的get请求========================
-+ (NSURLSessionTask *)px_getWithURLString:(NSString *)URLString params:(NSDictionary *)params success:(success)success failure:(failure)failure{
++ (NSURLSessionDataTask *)px_getWithURLString:(NSString *)URLString params:(NSDictionary *)params success:(success)success failure:(failure)failure{
     return [self px_getWithURLString:URLString params:params cache:nil success:success failure:failure];
 }
 
 #pragma mark =====================有缓存的post请求========================
-+ (NSURLSessionTask *)px_postWithURLString:(NSString *)URLString params:(NSDictionary *)params cache:(cache)cache success:(success)success failure:(failure)failure{
++ (NSURLSessionDataTask *)px_postWithURLString:(NSString *)URLString params:(NSDictionary *)params cache:(cache)cache success:(success)success failure:(failure)failure{
     NSString *key = [self getCacheKeyWithURLString:URLString params:params];
     if (cache) {
         id cacheObject = [[PXCache getInstance] px_readObjectWithKey:key];
         cache(cacheObject);
         if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,cacheObject);
     }
-    NSURLSessionTask *sessionTask = [manager POST:URLString parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    NSURLSessionDataTask *sessionTask = [manager POST:URLString parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [mTaskSource removeObject:task];
         if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,responseObject);
         if (cache) [[PXCache getInstance] px_cacheObject:responseObject withKey:key];
@@ -90,14 +90,14 @@ static NSMutableArray <NSURLSessionTask *> *mTaskSource;
 }
 
 #pragma mark =====================有缓存的get请求========================
-+ (NSURLSessionTask *)px_getWithURLString:(NSString *)URLString params:(NSDictionary *)params cache:(cache)cache success:(success)success failure:(failure)failure{
++ (NSURLSessionDataTask *)px_getWithURLString:(NSString *)URLString params:(NSDictionary *)params cache:(cache)cache success:(success)success failure:(failure)failure{
     NSString *key = [self getCacheKeyWithURLString:URLString params:params];
     if (cache) {
         id cacheObject = [[PXCache getInstance] px_readObjectWithKey:key];
         cache(cacheObject);
         if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,cacheObject);
     }
-    NSURLSessionTask *sessionTask = [manager GET:URLString parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    NSURLSessionDataTask *sessionTask = [manager GET:URLString parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [mTaskSource removeObject:task];
         if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,responseObject);
         if (cache) [[PXCache getInstance] px_cacheObject:responseObject withKey:key];
@@ -114,7 +114,7 @@ static NSMutableArray <NSURLSessionTask *> *mTaskSource;
 }
 
 #pragma mark =====================上传一组图片========================
-+ (NSURLSessionTask *)px_uploadWithURLString:(NSString *)URLString
++ (NSURLSessionDataTask *)px_uploadWithURLString:(NSString *)URLString
                                       params:(NSDictionary *)params
                                      keyName:(NSString *)keyName
                                       images:(NSArray<UIImage *> *)images
@@ -122,7 +122,7 @@ static NSMutableArray <NSURLSessionTask *> *mTaskSource;
                                     progress:(void (^)(NSProgress *))progress
                                      success:(success)success
                                      failure:(failure)failure{
-    NSURLSessionTask *sessionTask = [manager POST:URLString parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+    NSURLSessionDataTask *sessionTask = [manager POST:URLString parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         // 上传文件
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.dateFormat            = @"yyyyMMddHHmmss";

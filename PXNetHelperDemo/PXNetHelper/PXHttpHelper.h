@@ -55,10 +55,10 @@ typedef void(^failure)(NSURLSessionDataTask *task ,NSError *error);
  @param failure 请求失败回调
  @return 返回可取消的请求
  */
-+ (NSURLSessionTask *)px_postWithURLString:(NSString *)URLString
-                                    params:(NSDictionary *)params
-                                   success:(success)success
-                                   failure:(failure)failure;
++ (NSURLSessionDataTask *)px_postWithURLString:(NSString *)URLString
+                                        params:(NSDictionary *)params
+                                       success:(success)success
+                                       failure:(failure)failure;
 
 /**
  无缓存的GET请求
@@ -69,10 +69,10 @@ typedef void(^failure)(NSURLSessionDataTask *task ,NSError *error);
  @param failure 请求失败回调
  @return 返回可取消的请求
  */
-+ (NSURLSessionTask *)px_getWithURLString:(NSString *)URLString
-                                   params:(NSDictionary *)params
-                                  success:(success)success
-                                  failure:(failure)failure;
++ (NSURLSessionDataTask *)px_getWithURLString:(NSString *)URLString
+                                       params:(NSDictionary *)params
+                                      success:(success)success
+                                      failure:(failure)failure;
 
 /**
  有缓存的POST请求
@@ -84,11 +84,11 @@ typedef void(^failure)(NSURLSessionDataTask *task ,NSError *error);
  @param failure 请求失败回调
  @return 返回可取消的请求
  */
-+ (NSURLSessionTask *)px_postWithURLString:(NSString *)URLString
-                                    params:(NSDictionary *)params
-                                     cache:(cache)cache
-                                   success:(success)success
-                                   failure:(failure)failure;
++ (NSURLSessionDataTask *)px_postWithURLString:(NSString *)URLString
+                                        params:(NSDictionary *)params
+                                         cache:(cache)cache
+                                       success:(success)success
+                                       failure:(failure)failure;
 
 /**
  有缓存的GET请求
@@ -100,11 +100,11 @@ typedef void(^failure)(NSURLSessionDataTask *task ,NSError *error);
  @param failure 请求失败回调
  @return 返回可取消的请求
  */
-+ (NSURLSessionTask *)px_getWithURLString:(NSString *)URLString
-                                   params:(NSDictionary *)params
-                                    cache:(cache)cache
-                                  success:(success)success
-                                  failure:(failure)failure;
++ (NSURLSessionDataTask *)px_getWithURLString:(NSString *)URLString
+                                       params:(NSDictionary *)params
+                                        cache:(cache)cache
+                                      success:(success)success
+                                      failure:(failure)failure;
 
 /**
  上传一组图片
@@ -119,14 +119,14 @@ typedef void(^failure)(NSURLSessionDataTask *task ,NSError *error);
  @param failure 失败回调
  @return 返回可取消的请求
  */
-+ (NSURLSessionTask *)px_uploadWithURLString:(NSString *)URLString
-                                      params:(NSDictionary *)params
-                                     keyName:(NSString *)keyName
-                                      images:(NSArray<UIImage *>*)images
-                                       names:(NSArray<NSString *>*)names
-                                    progress:(void(^)(NSProgress *progress))progress
-                                     success:(success)success
-                                     failure:(failure)failure;
++ (NSURLSessionDataTask *)px_uploadWithURLString:(NSString *)URLString
+                                          params:(NSDictionary *)params
+                                         keyName:(NSString *)keyName
+                                          images:(NSArray<UIImage *>*)images
+                                           names:(NSArray<NSString *>*)names
+                                        progress:(void(^)(NSProgress *progress))progress
+                                         success:(success)success
+                                         failure:(failure)failure;
 
 /**
  取消某个请求,如果URLString=nil,取消全部请求，否则取消单个请求
