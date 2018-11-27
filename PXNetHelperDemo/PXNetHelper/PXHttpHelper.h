@@ -20,8 +20,8 @@ typedef NS_ENUM(NSUInteger,PXNetWorkStatus) {
 
 typedef void(^cache)(id cacheObject);
 typedef void(^networkStatus)(PXNetWorkStatus status);
-typedef void(^success)(NSURLSessionTask *task ,id responseObject);
-typedef void(^failure)(NSURLSessionTask *task ,NSError *error);
+typedef void(^success)(NSURLSessionDataTask *task ,id responseObject);
+typedef void(^failure)(NSURLSessionDataTask *task ,NSError *error);
 
 @interface PXHttpHelper : NSObject
 

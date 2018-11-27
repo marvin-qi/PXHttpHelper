@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "PXHttpHelper"
-  s.version      = "1.0.2"
+  s.version      = "1.0.3"
   s.summary      = "带缓存的网络请求"
 
   s.homepage     = "http://github.com/DemonArrow/PXHttpHelper.git"
