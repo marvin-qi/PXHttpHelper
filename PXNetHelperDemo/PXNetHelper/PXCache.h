@@ -55,3 +55,19 @@
 - (NSString *)px_getCacheKey:(NSString *)URLString params:(NSDictionary *)params;
 
 @end
+
+#pragma mark =====================NSDictionary,NSArray的分类========================
+
+#ifdef DEBUG
+@interface NSArray (PXHttpHelper)
+
+@end
+
+@interface NSDictionary (PXHttpHelper)
+
+@end
+
+@interface NSSet (PXHttpHelper)
+
+@end
+#endif

@@ -145,14 +145,4 @@ typedef void(^failure)(NSURLSessionDataTask *task ,NSError *error);
 
 @end
 
-#pragma mark =====================NSDictionary,NSArray的分类========================
 
-#ifdef DEBUG
-@interface NSArray (PXHttpHelper)
-
-@end
-
-@interface NSDictionary (PXHttpHelper)
-
-@end
-#endif
