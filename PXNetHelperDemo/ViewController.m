@@ -48,7 +48,7 @@
     //无缓存POST请求
     [PXHttpHelper px_postWithURLString:@"http://vn.demo.joels.cc/app/login/gettoken" params:nil success:^(NSURLSessionTask *task,id responseObject) {
         [PXHttpHelper px_postWithURLString:@"http://vn.demo.joels.cc/app/Home/goodsList" params:@{@"id":@(0),@"token":@"A180AE068450CFE8FC3FC26E24226F5B"} success:^(NSURLSessionTask *task,id res) {
-            
+            NSLog(@"我的打印===%@",res);
         } failure:nil];
     } failure:^(NSURLSessionTask *task,NSError *error) {
         
