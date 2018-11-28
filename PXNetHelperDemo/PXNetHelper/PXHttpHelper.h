@@ -20,8 +20,8 @@ typedef NS_ENUM(NSUInteger,PXNetWorkStatus) {
 
 typedef void(^cache)(id cacheObject);
 typedef void(^networkStatus)(PXNetWorkStatus status);
-typedef void(^success)(NSURLSessionDataTask *task ,id responseObject);
-typedef void(^failure)(NSURLSessionDataTask *task ,NSError *error);
+typedef void(^success)(NSURLSessionTask *task ,id responseObject);
+typedef void(^failure)(NSURLSessionTask *task ,NSError *error);
 
 @interface PXHttpHelper : NSObject
 
@@ -55,7 +55,7 @@ typedef void(^failure)(NSURLSessionDataTask *task ,NSError *error);
  @param failure 请求失败回调
  @return 返回可取消的请求
  */
-+ (NSURLSessionDataTask *)px_postWithURLString:(NSString *)URLString
++ (NSURLSessionTask *)px_postWithURLString:(NSString *)URLString
                                         params:(NSDictionary *)params
                                        success:(success)success
                                        failure:(failure)failure;
@@ -69,7 +69,7 @@ typedef void(^failure)(NSURLSessionDataTask *task ,NSError *error);
  @param failure 请求失败回调
  @return 返回可取消的请求
  */
-+ (NSURLSessionDataTask *)px_getWithURLString:(NSString *)URLString
++ (NSURLSessionTask *)px_getWithURLString:(NSString *)URLString
                                        params:(NSDictionary *)params
                                       success:(success)success
                                       failure:(failure)failure;
@@ -84,7 +84,7 @@ typedef void(^failure)(NSURLSessionDataTask *task ,NSError *error);
  @param failure 请求失败回调
  @return 返回可取消的请求
  */
-+ (NSURLSessionDataTask *)px_postWithURLString:(NSString *)URLString
++ (NSURLSessionTask *)px_postWithURLString:(NSString *)URLString
                                         params:(NSDictionary *)params
                                          cache:(cache)cache
                                        success:(success)success
@@ -100,7 +100,7 @@ typedef void(^failure)(NSURLSessionDataTask *task ,NSError *error);
  @param failure 请求失败回调
  @return 返回可取消的请求
  */
-+ (NSURLSessionDataTask *)px_getWithURLString:(NSString *)URLString
++ (NSURLSessionTask *)px_getWithURLString:(NSString *)URLString
                                        params:(NSDictionary *)params
                                         cache:(cache)cache
                                       success:(success)success
@@ -119,7 +119,7 @@ typedef void(^failure)(NSURLSessionDataTask *task ,NSError *error);
  @param failure 失败回调
  @return 返回可取消的请求
  */
-+ (NSURLSessionDataTask *)px_uploadWithURLString:(NSString *)URLString
++ (NSURLSessionTask *)px_uploadWithURLString:(NSString *)URLString
                                           params:(NSDictionary *)params
                                          keyName:(NSString *)keyName
                                           images:(NSArray<UIImage *>*)images
