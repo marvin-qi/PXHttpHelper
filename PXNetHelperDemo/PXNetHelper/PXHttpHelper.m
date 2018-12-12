@@ -143,7 +143,6 @@ static NSMutableArray <NSURLSessionTask *> *mTaskSource;
         });
     } success:^(NSURLSessionTask * _Nonnull task, id  _Nullable responseObject) {
         [mTaskSource removeObject:task];
-        responseObject = responseObject?[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:nil]:nil;
         if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,responseObject);
         success?success(task,responseObject):nil;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
