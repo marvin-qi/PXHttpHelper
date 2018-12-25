@@ -15,170 +15,181 @@
 #      define PXNetLog(...)
 #endif
 
+@interface PXHttpHelper ()
+@property (nonatomic,strong) AFHTTPSessionManager *manager;
+@property (nonatomic,strong) PXCache *mCache;
+@property (nonatomic,strong) NSMutableArray <NSURLSessionTask *>*mTaskSource;
+@property (nonatomic,assign) BOOL isLog;
+@end
+
 @implementation PXHttpHelper
 
-static BOOL isLog = YES;
-static AFHTTPSessionManager *manager;
-static NSMutableArray <NSURLSessionTask *> *mTaskSource;
+static PXHttpHelper *helper;
 
-#pragma mark =====================启动========================
-+ (void)load{
-    //开启网络监听
-    [[AFNetworkReachabilityManager sharedManager] startMonitoring];
++ (instancetype)helper{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (!helper) {
+            helper = [[super alloc] init];
+        }
+    });
+    return helper;
 }
 
-#pragma mark =====================初始化manager========================
-+ (void)initialize{
-    manager = [AFHTTPSessionManager manager];
-    manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    manager.requestSerializer  = [AFJSONRequestSerializer serializer];
-    manager.requestSerializer.timeoutInterval = 10.f;
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html", @"text/json", @"text/plain", @"text/javascript", @"text/xml", @"image/*", nil];
+- (instancetype)init{
+    if (self = [super init]) {
+        self.mCache = [PXCache cache];
+        [self setupManager];
+    }
+    return self;
+}
+
+- (void)setupManager{
+    //开启网络监听
+    [[AFNetworkReachabilityManager sharedManager] startMonitoring];
+    self.manager = [AFHTTPSessionManager manager];
+    self.manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    self.manager.requestSerializer  = [AFJSONRequestSerializer serializer];
+    self.manager.requestSerializer.timeoutInterval = 10.f;
+    self.manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html", @"text/json", @"text/plain", @"text/javascript", @"text/xml", @"image/*", nil];
     // 打开状态栏的等待菊花
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 }
 
-#pragma mark =====================获取当前网络环境========================
-+ (void)px_currentNetWorkStatus:(networkStatus)netStatus{
-    [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-        netStatus?netStatus(status):nil;
-    }];
+- (NSURLSessionTask *)post:(NSString *)url params:(NSDictionary *)params success:(requestSuccess)success failure:(requestFailure)failure{
+    return [self post:url params:params cache:nil success:success failure:failure];
 }
 
-#pragma mark =====================是否打开日志打印========================
-+ (void)px_OpenLog:(BOOL)Log{
-    isLog = Log;
+- (NSURLSessionTask *)get:(NSString *)url params:(NSDictionary *)params success:(requestSuccess)success failure:(requestFailure)failure{
+    return [self get:url params:params cache:nil success:success failure:failure];
 }
 
-#pragma mark =====================设置超时时间========================
-+ (void)px_changeTimeoutInterval:(NSTimeInterval)timeoutInterval{
-    manager.requestSerializer.timeoutInterval = timeoutInterval;
-}
-
-#pragma mark =====================无缓存的post请求========================
-+ (NSURLSessionTask *)px_postWithURLString:(NSString *)URLString params:(NSDictionary *)params success:(success)success failure:(failure)failure{
-    return [self px_postWithURLString:URLString params:params cache:nil success:success failure:failure];
-}
-
-#pragma mark =====================无缓存的get请求========================
-+ (NSURLSessionTask *)px_getWithURLString:(NSString *)URLString params:(NSDictionary *)params success:(success)success failure:(failure)failure{
-    return [self px_getWithURLString:URLString params:params cache:nil success:success failure:failure];
-}
-
-#pragma mark =====================有缓存的post请求========================
-+ (NSURLSessionTask *)px_postWithURLString:(NSString *)URLString params:(NSDictionary *)params cache:(cache)cache success:(success)success failure:(failure)failure{
-    NSString *key = [self getCacheKeyWithURLString:URLString params:params];
+- (NSURLSessionTask *)post:(NSString *)url params:(NSDictionary *)params cache:(requestCache)cache success:(requestSuccess)success failure:(requestFailure)failure{
+    NSString *cacheKey = [self.mCache getCacheKey:url params:params];
     if (cache) {
-        id cacheObject = [[PXCache getInstance] px_readObjectWithKey:key];
-        cache(cacheObject);
-        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,cacheObject);
+        id cacheObj = [self.mCache readObjectWithKey:cacheKey];
+        cache(cacheObj);
+        [self log:url params:params obj:cacheObj];
     }
-    NSURLSessionTask *sessionTask = [manager POST:URLString parameters:params progress:nil success:^(NSURLSessionTask * _Nonnull task, id  _Nullable responseObject) {
-        [mTaskSource removeObject:task];
-        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,responseObject);
-        if (cache) [[PXCache getInstance] px_cacheObject:responseObject withKey:key];
-        success?success(task,responseObject):nil;
+    __weak __typeof(self)weakSelf = self;
+    NSURLSessionTask *request = [self.manager POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        __strong __typeof(weakSelf)strongSelf = weakSelf;
+        [strongSelf.mTaskSource removeObject:task];
+        [strongSelf log:url params:params obj:responseObject];
+        if (cache) [strongSelf.mCache cacheObject:responseObject withKey:cacheKey];
+        success?success(task, responseObject):nil;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    } failure:^(NSURLSessionTask * _Nullable task, NSError * _Nonnull error) {
-        [mTaskSource removeObject:task];
-        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nerror = %@",URLString,params,error);
-        failure?failure(task,error):nil;
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        __strong __typeof(weakSelf)strongSelf = weakSelf;
+        [strongSelf.mTaskSource removeObject:task];
+        [strongSelf log:url params:params obj:error];
+        failure?failure(task, error):nil;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }];
-    mTaskSource?[mTaskSource addObject:sessionTask]:nil;
-    return sessionTask;
+    self.mTaskSource?[self.mTaskSource addObject:request]:nil;
+    return request;
 }
 
-#pragma mark =====================有缓存的get请求========================
-+ (NSURLSessionTask *)px_getWithURLString:(NSString *)URLString params:(NSDictionary *)params cache:(cache)cache success:(success)success failure:(failure)failure{
-    NSString *key = [self getCacheKeyWithURLString:URLString params:params];
+- (NSURLSessionTask *)get:(NSString *)url params:(NSDictionary *)params cache:(requestCache)cache success:(requestSuccess)success failure:(requestFailure)failure{
+    NSString *cacheKey = [self.mCache getCacheKey:url params:params];
     if (cache) {
-        id cacheObject = [[PXCache getInstance] px_readObjectWithKey:key];
-        cache(cacheObject);
-        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,cacheObject);
+        id cacheObj = [self.mCache readObjectWithKey:cacheKey];
+        cache(cacheObj);
+        [self log:url params:params obj:cacheObj];
     }
-    NSURLSessionTask *sessionTask = [manager GET:URLString parameters:params progress:nil success:^(NSURLSessionTask * _Nonnull task, id  _Nullable responseObject) {
-        [mTaskSource removeObject:task];
-        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,responseObject);
-        if (cache) [[PXCache getInstance] px_cacheObject:responseObject withKey:key];
-        success?success(task,responseObject):nil;
+    __weak __typeof(self)weakSelf = self;
+    NSURLSessionTask *request = [self.manager GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        __strong __typeof(weakSelf)strongSelf = weakSelf;
+        [strongSelf.mTaskSource removeObject:task];
+        [strongSelf log:url params:params obj:responseObject];
+        if (cache) [strongSelf.mCache cacheObject:responseObject withKey:cacheKey];
+        success?success(task, responseObject):nil;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    } failure:^(NSURLSessionTask * _Nullable task, NSError * _Nonnull error) {
-        [mTaskSource removeObject:task];
-        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nerror = %@",URLString,params,error);
-        failure?failure(task,error):nil;
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        __strong __typeof(weakSelf)strongSelf = weakSelf;
+        [strongSelf.mTaskSource removeObject:task];
+        [strongSelf log:url params:params obj:error];
+        failure?failure(task, error):nil;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }];
-    mTaskSource?[mTaskSource addObject:sessionTask]:nil;
-    return sessionTask;
+    self.mTaskSource?[self.mTaskSource addObject:request]:nil;
+    return request;
 }
 
-#pragma mark =====================上传一组图片========================
-+ (NSURLSessionTask *)px_uploadWithURLString:(NSString *)URLString
-                                      params:(NSDictionary *)params
-                                     keyName:(NSString *)keyName
-                                      images:(NSArray<UIImage *> *)images
-                                       names:(NSArray<NSString *> *)names
-                                    progress:(void (^)(NSProgress *))progress
-                                     success:(success)success
-                                     failure:(failure)failure{
-    NSURLSessionTask *sessionTask = [manager POST:URLString parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-        // 上传文件
+- (NSURLSessionTask *)upload:(NSString *)url params:(NSDictionary *)params keyName:(NSString *)keyName hite:(CGFloat)hite images:(NSArray<UIImage *> *)images names:(NSArray<NSString *> *)names progress:(void (^)(NSProgress *))progress success:(requestSuccess)success failure:(requestFailure)failure{
+    __weak __typeof(self)weakSelf = self;
+    hite = hite==0?.2:hite;
+    NSURLSessionTask *request = [self.manager POST:url parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        formatter.dateFormat            = @"yyyyMMddHHmmss";
-        for (NSInteger index = 0; index < images.count;index ++) {
-            NSString *str                   = [formatter stringFromDate:[NSDate date]];
-            NSString *fileName              = [NSString stringWithFormat:@"%@.jpg", str];
-            UIImage *image = [images objectAtIndex:index];
-            if (index < names.count) {
+        formatter.dateFormat = @"yyyyMMddHHmmss";
+        NSAssert(images.count>0, @"images 参数必传");
+        for (int index = 0; index < images.count; index++) {
+            NSString *fileName = [formatter stringFromDate:[NSDate date]];
+            if (names.count == images.count) {
                 fileName = [names objectAtIndex:index];
-                fileName = [fileName stringByAppendingString:@".jpg"];
             }
-            NSData *imageData = UIImageJPEGRepresentation(image, .2);
-            [formData appendPartWithFileData:imageData name:keyName fileName:fileName mimeType:@"image/jpeg"];
+            UIImage *image = [images objectAtIndex:index];
+            NSData *imageData = UIImageJPEGRepresentation(image, hite);
+            [formData appendPartWithFileData:imageData name:fileName fileName:fileName mimeType:@"image/jpg/png/jpeg"];
         }
     } progress:^(NSProgress * _Nonnull uploadProgress) {
         dispatch_sync(dispatch_get_main_queue(), ^{
             progress ? progress(uploadProgress) : nil;
         });
-    } success:^(NSURLSessionTask * _Nonnull task, id  _Nullable responseObject) {
-        [mTaskSource removeObject:task];
-        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nresponse = %@",URLString,params,responseObject);
-        success?success(task,responseObject):nil;
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        __strong __typeof(weakSelf)strongSelf = weakSelf;
+        [strongSelf.mTaskSource removeObject:task];
+        [strongSelf log:url params:params obj:responseObject];
+        success?success(task, responseObject):nil;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    } failure:^(NSURLSessionTask * _Nullable task, NSError * _Nonnull error) {
-        [mTaskSource removeObject:task];
-        if (isLog) PXNetLog(@"URLString = %@ \nparams = %@ \nerror = %@",URLString,params,error);
-        failure?failure(task,error):nil;
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        __strong __typeof(weakSelf)strongSelf = weakSelf;
+        [strongSelf.mTaskSource removeObject:task];
+        [strongSelf log:url params:params obj:error];
+        failure?failure(task, error):nil;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     }];
-    mTaskSource?[mTaskSource addObject:sessionTask]:nil;
-    return sessionTask;
+    self.mTaskSource?[self.mTaskSource addObject:request]:nil;
+    return request;
 }
 
-#pragma mark =====================获取缓存的关键字========================
-+ (NSString *)getCacheKeyWithURLString:(NSString *)URLString params:(NSDictionary *)params{
-    return [[PXCache getInstance] px_getCacheKey:URLString params:params];
+- (void)openLog:(BOOL)open{
+    self.isLog = open;
 }
 
-#pragma mark =====================取消某个请求，URLString=nil取消全部请求========================
-+ (void)px_cancelTask:(NSString *)URLString{
+- (void)currentNetStatus:(netStatusChange)status{
+    [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus netStatus) {
+        status?status(netStatus):nil;
+    }];
+}
+
+- (void)changeTimeoutInterval:(NSTimeInterval)timeoutInterval{
+    self.manager.requestSerializer.timeoutInterval = timeoutInterval;
+}
+
+- (void)setHeadForRequest:(NSString *)key value:(NSString *)value{
+    [self.manager.requestSerializer setValue:value forHTTPHeaderField:key];
+}
+
+- (void)cancelTask:(NSString *)url{
     if ([self mTaskSource].count<1)return;
-    if (!URLString) {
+    if (!url) {
         //取消全部请求
         @synchronized(self){
-            [[self mTaskSource] enumerateObjectsUsingBlock:^(NSURLSessionTask *task, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self.mTaskSource enumerateObjectsUsingBlock:^(NSURLSessionTask *task, NSUInteger idx, BOOL * _Nonnull stop) {
                 [task cancel];
             }];
-            [[self mTaskSource] removeAllObjects];
+            [self.mTaskSource removeAllObjects];
         }
     }else{
         //取消单个请求
         @synchronized(self){
-            [[self mTaskSource] enumerateObjectsUsingBlock:^(NSURLSessionTask *task, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([task.currentRequest.URL.absoluteString hasPrefix:URLString]) {
+            __weak __typeof(self)weakSelf = self;
+            [self.mTaskSource enumerateObjectsUsingBlock:^(NSURLSessionTask *task, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([task.currentRequest.URL.absoluteString hasPrefix:url]) {
                     [task cancel];
-                    [[self mTaskSource] removeObject:task];
+                    __strong __typeof(weakSelf)strongSelf = weakSelf;
+                    [strongSelf.mTaskSource removeObject:task];
                     *stop = YES;
                 }
             }];
@@ -186,16 +197,17 @@ static NSMutableArray <NSURLSessionTask *> *mTaskSource;
     }
 }
 
-#pragma mark =====================设置请求头========================
-+ (void)px_setHeadForRequest:(NSString *)key value:(NSString *)value{
-    [manager.requestSerializer setValue:value forHTTPHeaderField:key];
+- (void)log:(NSString *)url params:(NSDictionary *)params obj:(id)obj{
+    if (self.isLog) {
+        PXNetLog(@"\nurl === %@\nparams === %@\nobj === %@",url,params,obj);
+    }
 }
 
-+ (NSMutableArray *)mTaskSource{
-    if (!mTaskSource) {
-        mTaskSource = [NSMutableArray new];
+- (NSMutableArray<NSURLSessionTask *> *)mTaskSource{
+    if (_mTaskSource) {
+        _mTaskSource = [NSMutableArray new];
     }
-    return mTaskSource;
+    return _mTaskSource;
 }
 
 @end

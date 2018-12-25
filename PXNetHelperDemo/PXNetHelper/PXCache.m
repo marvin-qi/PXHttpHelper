@@ -11,7 +11,7 @@
 @implementation PXCache
 
 static PXCache *instance;
-+ (PXCache *)getInstance{
++ (PXCache *)cache{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (nil == instance) {
@@ -21,7 +21,7 @@ static PXCache *instance;
     return instance;
 }
 
-- (NSString *)px_getCacheKey:(NSString *)URLString params:(NSDictionary *)params{
+- (NSString *)getCacheKey:(NSString *)URLString params:(NSDictionary *)params{
     if (params.count < 1 || params == nil || !params) {
         return URLString;
     }
@@ -30,19 +30,19 @@ static PXCache *instance;
     return [URLString stringByAppendingString:paramString];
 }
 
-- (void)px_clearAllCache{
+- (void)clearAllCache{
     [instance removeAllObjects];
 }
 
-- (void)px_clearCacheWithKey:(NSString *)key{
+- (void)clearCacheWithKey:(NSString *)key{
     [instance removeObjectForKey:key];
 }
 
-- (void)px_cacheObject:(id)obj withKey:(NSString *)key{
+- (void)cacheObject:(id)obj withKey:(NSString *)key{
     [instance setObject:obj forKey:key];
 }
 
-- (id)px_readObjectWithKey:(NSString *)key{
+- (id)readObjectWithKey:(NSString *)key{
     return [instance objectForKey:key];
 }
 

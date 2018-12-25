@@ -9,139 +9,63 @@
 #import <UIKit/UIKit.h>
 #import "PXCache.h"
 
-static NSString *PXNetworkStatusChanged;
-
 typedef NS_ENUM(NSUInteger,PXNetWorkStatus) {
-    PXNetWorkStatusUnknow = -1,//未知网络
-    PXNetworkStatusNoNet  = 0,//无网络
-    PXNetWorkStatusWifi   = 1,//WIFI
-    PXNetworkStatusPhone  = 2,//手机网络
+    PXNetWorkStatusUnknow = -1,/** 未知网络*/
+    PXNetworkStatusNoNet  = 0, /** 无网络 */
+    PXNetWorkStatusWifi   = 1, /** WIFI */
+    PXNetworkStatusPhone  = 2  /** 手机网络 */
 };
 
-typedef void(^cache)(id cacheObject);
-typedef void(^networkStatus)(PXNetWorkStatus status);
-typedef void(^success)(NSURLSessionTask *task ,id responseObject);
-typedef void(^failure)(NSURLSessionTask *task ,NSError *error);
+typedef void(^requestCache)(id cacheObj);
+typedef void(^netStatusChange)(PXNetWorkStatus status);
+typedef void(^requestSuccess)(NSURLSessionTask *task ,id responseObject);
+typedef void(^requestFailure)(NSURLSessionTask *task ,NSError *error);
 
 @interface PXHttpHelper : NSObject
 
-/**
- 是否打开打印日志
++ (instancetype)helper;
 
- @param Log 是否打开请求日志-默认打开
- */
-+ (void)px_OpenLog:(BOOL)Log;
+- (NSURLSessionTask *)post:(nonnull NSString *)url
+                    params:(nullable NSDictionary *)params
+                   success:(nullable requestSuccess)success
+                   failure:(nullable requestFailure)failure;
 
-/**
- 获取当前网络环境
+- (NSURLSessionTask *)get:(nonnull NSString *)url
+                   params:(nullable NSDictionary *)params
+                  success:(nullable requestSuccess)success
+                  failure:(nullable requestFailure)failure;
 
- @param netStatus 当前网络环境回调
- */
-+ (void)px_currentNetWorkStatus:(networkStatus)netStatus;
+- (NSURLSessionTask *)post:(nonnull NSString *)url
+                    params:(nullable NSDictionary *)params
+                     cache:(nullable requestCache)cache
+                   success:(nullable requestSuccess)success
+                   failure:(nullable requestFailure)failure;
 
-/**
- 修改请求等待时间
+- (NSURLSessionTask *)get:(nonnull NSString *)url
+                   params:(nullable NSDictionary *)params
+                    cache:(nullable requestCache)cache
+                  success:(nullable requestSuccess)success
+                  failure:(nullable requestFailure)failure;
 
- @param timeoutInterval 请求等待时间
- */
-+ (void)px_changeTimeoutInterval:(NSTimeInterval)timeoutInterval;
+- (NSURLSessionTask *)upload:(nonnull NSString *)url
+                      params:(nullable NSDictionary *)params
+                     keyName:(nullable NSString *)keyName
+                        hite:(CGFloat)hite
+                      images:(nonnull NSArray<UIImage *>*)images
+                       names:(nullable NSArray<NSString *>*)names
+                    progress:(nullable void(^)(NSProgress *progress))progress
+                     success:(nullable requestSuccess)success
+                     failure:(nullable requestFailure)failure;
 
-/**
- 无缓存的POST请求
+- (void)openLog:(BOOL)open;
 
- @param URLString 请求地址
- @param params 请求参数
- @param success 请求成功回调
- @param failure 请求失败回调
- @return 返回可取消的请求
- */
-+ (NSURLSessionTask *)px_postWithURLString:(NSString *)URLString
-                                        params:(NSDictionary *)params
-                                       success:(success)success
-                                       failure:(failure)failure;
+- (void)currentNetStatus:(netStatusChange)status;
 
-/**
- 无缓存的GET请求
+- (void)changeTimeoutInterval:(NSTimeInterval)timeoutInterval;
 
- @param URLString 请求地址
- @param params 请求参数
- @param success 请求成功回调
- @param failure 请求失败回调
- @return 返回可取消的请求
- */
-+ (NSURLSessionTask *)px_getWithURLString:(NSString *)URLString
-                                       params:(NSDictionary *)params
-                                      success:(success)success
-                                      failure:(failure)failure;
+- (void)cancelTask:(nullable NSString *)url;
 
-/**
- 有缓存的POST请求
-
- @param URLString 请求地址
- @param params 请求参数
- @param cache 缓存
- @param success 请求成功回调
- @param failure 请求失败回调
- @return 返回可取消的请求
- */
-+ (NSURLSessionTask *)px_postWithURLString:(NSString *)URLString
-                                        params:(NSDictionary *)params
-                                         cache:(cache)cache
-                                       success:(success)success
-                                       failure:(failure)failure;
-
-/**
- 有缓存的GET请求
-
- @param URLString 请求地址
- @param params 请求参数
- @param cache 缓存
- @param success 请求成功回调
- @param failure 请求失败回调
- @return 返回可取消的请求
- */
-+ (NSURLSessionTask *)px_getWithURLString:(NSString *)URLString
-                                       params:(NSDictionary *)params
-                                        cache:(cache)cache
-                                      success:(success)success
-                                      failure:(failure)failure;
-
-/**
- 上传一组图片
-
- @param URLString 请求地址
- @param params 请求参数
- @param keyName 图片关键字
- @param images 图片数组
- @param names 图片名字数组
- @param progress 上传进度回调
- @param success 成功回调
- @param failure 失败回调
- @return 返回可取消的请求
- */
-+ (NSURLSessionTask *)px_uploadWithURLString:(NSString *)URLString
-                                          params:(NSDictionary *)params
-                                         keyName:(NSString *)keyName
-                                          images:(NSArray<UIImage *>*)images
-                                           names:(NSArray<NSString *>*)names
-                                        progress:(void(^)(NSProgress *progress))progress
-                                         success:(success)success
-                                         failure:(failure)failure;
-
-/**
- 取消某个请求,如果URLString=nil,取消全部请求，否则取消单个请求
-
- @param URLString 如果URLString=nil,取消全部请求，否则取消单个请求
- */
-+ (void)px_cancelTask:(NSString *)URLString;
-
-/**
- 设置请求头
- 
- @param key 头的key
- @param value 头的value
- */
-+ (void)px_setHeadForRequest:(NSString *)key value:(NSString *)value;
+- (void)setHeadForRequest:(nonnull NSString *)key value:(nonnull NSString *)value;
 
 @end
 
