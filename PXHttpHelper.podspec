@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "PXHttpHelper"
-  s.version      = "1.3.0"
+  s.version      = "1.4.0"
   s.summary      = "带缓存的网络请求"
 
   s.homepage     = "http://github.com/DemonArrow/PXHttpHelper.git"
@@ -12,6 +12,9 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/DemonArrow/PXHttpHelper.git", :tag => "#{s.version}" }
 
   s.source_files  = "PXNetHelper/*.{h,m}"
+  s.subspec 'PXConvert' do |ss|
+    ss.source_files = "PXNetHelper/PXConvert/*.{h,m}"
+  end
   s.dependency 'AFNetworking', '~> 3.2.0'
   s.requires_arc = true
 
