@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "9.0"
   s.source       = { :git => "https://github.com/DemonArrow/PXHttpHelper.git", :tag => "#{s.version}" }
 
-  s.source_files  = "PXNetHelperDemo/PXNetHelper/**"
+  s.source_files  = "PXNetHelper/**"
   s.dependency 'AFNetworking', '~> 3.2.0'
   s.requires_arc = true
 
