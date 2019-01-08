@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A65266F721E4A1BE004522A1 /* NSDictionary+PXHttp.m in Sources */ = {isa = PBXBuildFile; fileRef = A65266F621E4A1BE004522A1 /* NSDictionary+PXHttp.m */; };
+		A65266FA21E4A1D8004522A1 /* NSArray+PXHttp.m in Sources */ = {isa = PBXBuildFile; fileRef = A65266F921E4A1D8004522A1 /* NSArray+PXHttp.m */; };
+		A65266FD21E4A1E5004522A1 /* NSSet+PXHttp.m in Sources */ = {isa = PBXBuildFile; fileRef = A65266FC21E4A1E5004522A1 /* NSSet+PXHttp.m */; };
 		A6C8720B20A02D040069B3EE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8720A20A02D040069B3EE /* AppDelegate.m */; };
 		A6C8720E20A02D040069B3EE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8720D20A02D040069B3EE /* ViewController.m */; };
 		A6C8721120A02D040069B3EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A6C8720F20A02D040069B3EE /* Main.storyboard */; };
@@ -36,6 +39,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A65266F521E4A1BE004522A1 /* NSDictionary+PXHttp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+PXHttp.h"; sourceTree = "<group>"; };
+		A65266F621E4A1BE004522A1 /* NSDictionary+PXHttp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+PXHttp.m"; sourceTree = "<group>"; };
+		A65266F821E4A1D8004522A1 /* NSArray+PXHttp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+PXHttp.h"; sourceTree = "<group>"; };
+		A65266F921E4A1D8004522A1 /* NSArray+PXHttp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSArray+PXHttp.m"; sourceTree = "<group>"; };
+		A65266FB21E4A1E5004522A1 /* NSSet+PXHttp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSSet+PXHttp.h"; sourceTree = "<group>"; };
+		A65266FC21E4A1E5004522A1 /* NSSet+PXHttp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSSet+PXHttp.m"; sourceTree = "<group>"; };
 		A6C8720620A02D030069B3EE /* PXNetHelperDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PXNetHelperDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6C8720920A02D030069B3EE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A6C8720A20A02D040069B3EE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -99,6 +108,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A65266F421E4A1AD004522A1 /* PXConvert */ = {
+			isa = PBXGroup;
+			children = (
+				A65266F521E4A1BE004522A1 /* NSDictionary+PXHttp.h */,
+				A65266F621E4A1BE004522A1 /* NSDictionary+PXHttp.m */,
+				A65266F821E4A1D8004522A1 /* NSArray+PXHttp.h */,
+				A65266F921E4A1D8004522A1 /* NSArray+PXHttp.m */,
+				A65266FB21E4A1E5004522A1 /* NSSet+PXHttp.h */,
+				A65266FC21E4A1E5004522A1 /* NSSet+PXHttp.m */,
+			);
+			path = PXConvert;
+			sourceTree = "<group>";
+		};
 		A6C871FD20A02D030069B3EE = {
 			isa = PBXGroup;
 			children = (
@@ -141,6 +163,7 @@
 				A6C8722020A02E090069B3EE /* PXCache.m */,
 				A6C8722220A02E090069B3EE /* PXHttpHelper.h */,
 				A6C8722320A02E090069B3EE /* PXHttpHelper.m */,
+				A65266F421E4A1AD004522A1 /* PXConvert */,
 			);
 			path = PXNetHelper;
 			sourceTree = "<group>";
@@ -285,6 +308,7 @@
 				A6C8725720A02E410069B3EE /* AFURLResponseSerialization.m in Sources */,
 				A6C8721920A02D050069B3EE /* main.m in Sources */,
 				A6C8725020A02E410069B3EE /* AFNetworkActivityIndicatorManager.m in Sources */,
+				A65266FA21E4A1D8004522A1 /* NSArray+PXHttp.m in Sources */,
 				A6C8725820A02E410069B3EE /* AFHTTPSessionManager.m in Sources */,
 				A6C8725A20A02E410069B3EE /* AFURLRequestSerialization.m in Sources */,
 				A6C8722520A02E090069B3EE /* PXHttpHelper.m in Sources */,
@@ -292,8 +316,10 @@
 				A6C8725520A02E410069B3EE /* AFAutoPurgingImageCache.m in Sources */,
 				A6C8725420A02E410069B3EE /* UIWebView+AFNetworking.m in Sources */,
 				A6C8724E20A02E410069B3EE /* UIProgressView+AFNetworking.m in Sources */,
+				A65266FD21E4A1E5004522A1 /* NSSet+PXHttp.m in Sources */,
 				A6C8725C20A02E410069B3EE /* AFSecurityPolicy.m in Sources */,
 				A6C8725620A02E410069B3EE /* AFImageDownloader.m in Sources */,
+				A65266F721E4A1BE004522A1 /* NSDictionary+PXHttp.m in Sources */,
 				A6C8725120A02E410069B3EE /* UIImageView+AFNetworking.m in Sources */,
 				A6C8720B20A02D040069B3EE /* AppDelegate.m in Sources */,
 			);

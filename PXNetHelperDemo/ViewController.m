@@ -19,26 +19,25 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    PXHttpHelper *helper = [PXHttpHelper helper];
     
     //关闭打印
-    [helper openLog:NO];
+    [PXHttpHelper openLog:NO];
     //打开打印
-    [helper openLog:YES];
+    [PXHttpHelper openLog:YES];
     //监听网络
-    [helper currentNetStatus:^(PXNetWorkStatus status) {
+    [PXHttpHelper currentNetStatus:^(PXNetWorkStatus status) {
         
     }];
     
     //无缓存GET请求
-    [helper get:@"" params:nil success:^(NSURLSessionTask *task, id responseObject) {
+    [PXHttpHelper get:@"" params:nil success:^(NSURLSessionTask *task, id responseObject) {
         
     } failure:^(NSURLSessionTask *task, NSError *error) {
         
     }];
 
     //有缓存GET请求
-    [helper get:@"" params:@{@"key":@"value"} cache:^(id cacheObject) {
+    [PXHttpHelper get:@"" params:@{@"key":@"value"} cache:^(id cacheObject) {
         
     } success:^(NSURLSessionTask *task, id responseObject) {
         
@@ -47,8 +46,8 @@
     }];
     
     //无缓存POST请求
-    [helper post:@"http://vn.demo.joels.cc/app/login/gettoken" params:nil success:^(NSURLSessionTask *task, id responseObject) {
-        [helper post:@"http://vn.demo.joels.cc/app/Home/goodsList" params:@{@"id":@(0),@"token":@"A180AE068450CFE8FC3FC26E24226F5B"} success:^(NSURLSessionTask *task, id res) {
+    [PXHttpHelper post:@"http://vn.demo.joels.cc/app/login/gettoken" params:nil success:^(NSURLSessionTask *task, id responseObject) {
+        [PXHttpHelper post:@"http://vn.demo.joels.cc/app/Home/goodsList" params:@{@"id":@(0),@"token":@"A180AE068450CFE8FC3FC26E24226F5B"} success:^(NSURLSessionTask *task, id res) {
             NSLog(@"我的打印===%@",res);
         } failure:nil];
     } failure:^(NSURLSessionTask *task, NSError *error) {
@@ -56,22 +55,22 @@
     }];
     
     //有缓存POST请求
-    [helper post:@"" params:@{@"key":@"value"} cache:nil success:nil failure:nil];
+    [PXHttpHelper post:@"" params:@{@"key":@"value"} cache:nil success:nil failure:nil];
 
     //上传图片
-    [helper upload:@"" params:nil keyName:@"" hite:.3 images:@[[UIImage imageNamed:@"res_img_poi_logo_default@2x"]] names:@[@""] progress:^(NSProgress *progress) {
-
+    [PXHttpHelper upload:@"" params:nil keyName:@"" hite:.3 images:@[[UIImage imageNamed:@"res_img_poi_logo_default@2x"]] names:@[@""] progress:^(NSProgress *progress) {
+        
     } success:^(NSURLSessionTask *task, id responseObject) {
         
     } failure:^(NSURLSessionTask *task, NSError *error) {
-
+        
     }];
     
     //取消@""请求
-    [helper cancelTask:@""];
+    [PXHttpHelper cancelTask:@""];
     
     //取消全部请求
-    [helper cancelTask:nil];
+    [PXHttpHelper cancelTask:nil];
     
 }
 
