@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		A652670D21E4B59C004522A1 /* PXHttpHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A652670321E4B59C004522A1 /* PXHttpHelper.m */; };
-		A652670E21E4B59C004522A1 /* NSArray+PXHttp.m in Sources */ = {isa = PBXBuildFile; fileRef = A652670821E4B59C004522A1 /* NSArray+PXHttp.m */; };
-		A652670F21E4B59C004522A1 /* NSDictionary+PXHttp.m in Sources */ = {isa = PBXBuildFile; fileRef = A652670921E4B59C004522A1 /* NSDictionary+PXHttp.m */; };
-		A652671021E4B59C004522A1 /* NSSet+PXHttp.m in Sources */ = {isa = PBXBuildFile; fileRef = A652670A21E4B59C004522A1 /* NSSet+PXHttp.m */; };
 		A652671121E4B59C004522A1 /* PXCache.m in Sources */ = {isa = PBXBuildFile; fileRef = A652670B21E4B59C004522A1 /* PXCache.m */; };
+		A652671821E4BF3B004522A1 /* NSSet+PXHttp.m in Sources */ = {isa = PBXBuildFile; fileRef = A652671421E4BF3B004522A1 /* NSSet+PXHttp.m */; };
+		A652671921E4BF3B004522A1 /* NSArray+PXHttp.m in Sources */ = {isa = PBXBuildFile; fileRef = A652671521E4BF3B004522A1 /* NSArray+PXHttp.m */; };
+		A652671A21E4BF3B004522A1 /* NSDictionary+PXHttp.m in Sources */ = {isa = PBXBuildFile; fileRef = A652671621E4BF3B004522A1 /* NSDictionary+PXHttp.m */; };
 		A6C8720B20A02D040069B3EE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8720A20A02D040069B3EE /* AppDelegate.m */; };
 		A6C8720E20A02D040069B3EE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C8720D20A02D040069B3EE /* ViewController.m */; };
 		A6C8721120A02D040069B3EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A6C8720F20A02D040069B3EE /* Main.storyboard */; };
@@ -41,14 +41,14 @@
 /* Begin PBXFileReference section */
 		A652670221E4B59C004522A1 /* PXCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PXCache.h; sourceTree = "<group>"; };
 		A652670321E4B59C004522A1 /* PXHttpHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PXHttpHelper.m; sourceTree = "<group>"; };
-		A652670521E4B59C004522A1 /* NSArray+PXHttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+PXHttp.h"; sourceTree = "<group>"; };
-		A652670621E4B59C004522A1 /* NSDictionary+PXHttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+PXHttp.h"; sourceTree = "<group>"; };
-		A652670721E4B59C004522A1 /* NSSet+PXHttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSSet+PXHttp.h"; sourceTree = "<group>"; };
-		A652670821E4B59C004522A1 /* NSArray+PXHttp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+PXHttp.m"; sourceTree = "<group>"; };
-		A652670921E4B59C004522A1 /* NSDictionary+PXHttp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+PXHttp.m"; sourceTree = "<group>"; };
-		A652670A21E4B59C004522A1 /* NSSet+PXHttp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSSet+PXHttp.m"; sourceTree = "<group>"; };
 		A652670B21E4B59C004522A1 /* PXCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PXCache.m; sourceTree = "<group>"; };
 		A652670C21E4B59C004522A1 /* PXHttpHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PXHttpHelper.h; sourceTree = "<group>"; };
+		A652671221E4BF3A004522A1 /* NSSet+PXHttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSSet+PXHttp.h"; sourceTree = "<group>"; };
+		A652671321E4BF3A004522A1 /* NSDictionary+PXHttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+PXHttp.h"; sourceTree = "<group>"; };
+		A652671421E4BF3B004522A1 /* NSSet+PXHttp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSSet+PXHttp.m"; sourceTree = "<group>"; };
+		A652671521E4BF3B004522A1 /* NSArray+PXHttp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+PXHttp.m"; sourceTree = "<group>"; };
+		A652671621E4BF3B004522A1 /* NSDictionary+PXHttp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+PXHttp.m"; sourceTree = "<group>"; };
+		A652671721E4BF3B004522A1 /* NSArray+PXHttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+PXHttp.h"; sourceTree = "<group>"; };
 		A6C8720620A02D030069B3EE /* PXNetHelperDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PXNetHelperDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6C8720920A02D030069B3EE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A6C8720A20A02D040069B3EE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -111,27 +111,19 @@
 		A652670121E4B59C004522A1 /* PXNetHelper */ = {
 			isa = PBXGroup;
 			children = (
+				A652671721E4BF3B004522A1 /* NSArray+PXHttp.h */,
+				A652671521E4BF3B004522A1 /* NSArray+PXHttp.m */,
+				A652671321E4BF3A004522A1 /* NSDictionary+PXHttp.h */,
+				A652671621E4BF3B004522A1 /* NSDictionary+PXHttp.m */,
+				A652671221E4BF3A004522A1 /* NSSet+PXHttp.h */,
+				A652671421E4BF3B004522A1 /* NSSet+PXHttp.m */,
 				A652670221E4B59C004522A1 /* PXCache.h */,
-				A652670321E4B59C004522A1 /* PXHttpHelper.m */,
-				A652670421E4B59C004522A1 /* PXConvert */,
 				A652670B21E4B59C004522A1 /* PXCache.m */,
 				A652670C21E4B59C004522A1 /* PXHttpHelper.h */,
+				A652670321E4B59C004522A1 /* PXHttpHelper.m */,
 			);
 			path = PXNetHelper;
 			sourceTree = SOURCE_ROOT;
-		};
-		A652670421E4B59C004522A1 /* PXConvert */ = {
-			isa = PBXGroup;
-			children = (
-				A652670521E4B59C004522A1 /* NSArray+PXHttp.h */,
-				A652670621E4B59C004522A1 /* NSDictionary+PXHttp.h */,
-				A652670721E4B59C004522A1 /* NSSet+PXHttp.h */,
-				A652670821E4B59C004522A1 /* NSArray+PXHttp.m */,
-				A652670921E4B59C004522A1 /* NSDictionary+PXHttp.m */,
-				A652670A21E4B59C004522A1 /* NSSet+PXHttp.m */,
-			);
-			path = PXConvert;
-			sourceTree = "<group>";
 		};
 		A6C871FD20A02D030069B3EE = {
 			isa = PBXGroup;
@@ -299,9 +291,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A652671921E4BF3B004522A1 /* NSArray+PXHttp.m in Sources */,
 				A6C8725920A02E410069B3EE /* AFURLSessionManager.m in Sources */,
 				A6C8724F20A02E410069B3EE /* UIRefreshControl+AFNetworking.m in Sources */,
+				A652671821E4BF3B004522A1 /* NSSet+PXHttp.m in Sources */,
 				A6C8720E20A02D040069B3EE /* ViewController.m in Sources */,
+				A652671A21E4BF3B004522A1 /* NSDictionary+PXHttp.m in Sources */,
 				A6C8725320A02E410069B3EE /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				A6C8725B20A02E410069B3EE /* AFNetworkReachabilityManager.m in Sources */,
 				A652671121E4B59C004522A1 /* PXCache.m in Sources */,
@@ -310,12 +305,9 @@
 				A6C8725020A02E410069B3EE /* AFNetworkActivityIndicatorManager.m in Sources */,
 				A6C8725820A02E410069B3EE /* AFHTTPSessionManager.m in Sources */,
 				A652670D21E4B59C004522A1 /* PXHttpHelper.m in Sources */,
-				A652670E21E4B59C004522A1 /* NSArray+PXHttp.m in Sources */,
 				A6C8725A20A02E410069B3EE /* AFURLRequestSerialization.m in Sources */,
-				A652670F21E4B59C004522A1 /* NSDictionary+PXHttp.m in Sources */,
 				A6C8725220A02E410069B3EE /* UIButton+AFNetworking.m in Sources */,
 				A6C8725520A02E410069B3EE /* AFAutoPurgingImageCache.m in Sources */,
-				A652671021E4B59C004522A1 /* NSSet+PXHttp.m in Sources */,
 				A6C8725420A02E410069B3EE /* UIWebView+AFNetworking.m in Sources */,
 				A6C8724E20A02E410069B3EE /* UIProgressView+AFNetworking.m in Sources */,
 				A6C8725C20A02E410069B3EE /* AFSecurityPolicy.m in Sources */,
