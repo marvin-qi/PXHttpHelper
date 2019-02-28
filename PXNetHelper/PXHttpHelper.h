@@ -9,20 +9,25 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSUInteger,PXNetWorkStatus) {
-    PXNetWorkStatusUnknow = -1,/** 未知网络*/
-    PXNetworkStatusNoNet  = 0, /** 无网络 */
-    PXNetWorkStatusWifi   = 1, /** WIFI */
-    PXNetworkStatusPhone  = 2  /** 手机网络 */
+    PXNetWorkStatusUnknown = -1,///< 未知网络
+    PXNetworkStatusNoNet  = 0,  ///< 无网络
+    PXNetworkStatusMobile = 1,  ///< 手机网络
+    PXNetWorkStatusWiFi   = 2   ///< WIFI
 };
+
+typedef enum {
+    POST,
+    GET
+}PXRequestMethod;
 
 typedef void(^requestCache)(id cacheObj);
 typedef void(^netStatusChange)(PXNetWorkStatus status);
-typedef void(^requestSuccess)(NSURLSessionTask *task ,id responseObject);
-typedef void(^requestFailure)(NSURLSessionTask *task ,NSError *error);
+typedef void(^requestSuccess)(NSURLSessionTask *task, id responseObject);
+typedef void(^requestFailure)(NSURLSessionTask *task, NSError *error);
 typedef void(^requestProgress)(NSProgress *progress);
 
+@class PXURLSessionTask;
 @interface PXHttpHelper : NSObject
-
 
 /**
  无缓存POST请求
@@ -32,7 +37,7 @@ typedef void(^requestProgress)(NSProgress *progress);
  @param success 请求成功回调
  @param failure 请求失败回调
  */
-+ (NSURLSessionTask *)post:(nonnull NSString *)url
++ (PXURLSessionTask *)post:(nonnull NSString *)url
                     params:(nullable NSDictionary *)params
                    success:(nullable requestSuccess)success
                    failure:(nullable requestFailure)failure;
@@ -45,7 +50,7 @@ typedef void(^requestProgress)(NSProgress *progress);
  @param success 请求成功回调
  @param failure 请求失败回调
  */
-+ (NSURLSessionTask *)get:(nonnull NSString *)url
++ (PXURLSessionTask *)get:(nonnull NSString *)url
                    params:(nullable NSDictionary *)params
                   success:(nullable requestSuccess)success
                   failure:(nullable requestFailure)failure;
@@ -59,7 +64,7 @@ typedef void(^requestProgress)(NSProgress *progress);
  @param success 请求成功回调
  @param failure 请求失败回调
  */
-+ (NSURLSessionTask *)post:(nonnull NSString *)url
++ (PXURLSessionTask *)post:(nonnull NSString *)url
                     params:(nullable NSDictionary *)params
                      cache:(nullable requestCache)cache
                    success:(nullable requestSuccess)success
@@ -74,11 +79,43 @@ typedef void(^requestProgress)(NSProgress *progress);
  @param success 请求成功回调
  @param failure 请求失败回调
  */
-+ (NSURLSessionTask *)get:(nonnull NSString *)url
++ (PXURLSessionTask *)get:(nonnull NSString *)url
                    params:(nullable NSDictionary *)params
                     cache:(nullable requestCache)cache
                   success:(nullable requestSuccess)success
                   failure:(nullable requestFailure)failure;
+
+/**
+ 无缓存可设置请求方式
+
+ @param url 请求地址
+ @param method 请求方式
+ @param params 请求参数
+ @param success 成功回调
+ @param failure 失败回调
+ */
++ (PXURLSessionTask *)request:(NSString *)url
+                       method:(PXRequestMethod)method
+                       params:(nullable NSDictionary *)params
+                      success:(nullable requestSuccess)success
+                      failure:(nullable requestFailure)failure;
+
+/**
+ 有缓存可设置请求方式
+
+ @param url 请求地址
+ @param method 请求方式
+ @param params 请求参数
+ @param cache 缓存回调
+ @param success 成功回调
+ @param failure 失败回调
+ */
++ (PXURLSessionTask *)request:(NSString *)url
+                       method:(PXRequestMethod)method
+                       params:(nullable NSDictionary *)params
+                        cache:(nullable requestCache)cache
+                      success:(nullable requestSuccess)success
+                      failure:(nullable requestFailure)failure;
 
 /**
  上传图片
@@ -86,14 +123,14 @@ typedef void(^requestProgress)(NSProgress *progress);
  @param url 上传路径
  @param params 请求参数
  @param keyName 关键字
- @param hite 压缩比
+ @param hite 压缩比,默认0.2
  @param images 图片数组
  @param names 图片名字数组
  @param progress 上传进度
  @param success 上传成功回调
  @param failure 上传失败回调
  */
-+ (NSURLSessionTask *)upload:(nonnull NSString *)url
++ (PXURLSessionTask *)upload:(nonnull NSString *)url
                       params:(nullable NSDictionary *)params
                      keyName:(nullable NSString *)keyName
                         hite:(CGFloat)hite
@@ -110,6 +147,11 @@ typedef void(^requestProgress)(NSProgress *progress);
  @param open 是否打开日志打印
  */
 + (void)openLog:(BOOL)open;
+
+/**
+ 查看是否打开打印
+ */
++ (BOOL)checkLog;
 
 /**
  获取当前网络状态
@@ -142,4 +184,11 @@ typedef void(^requestProgress)(NSProgress *progress);
 
 @end
 
+
+@interface PXURLSessionTask : NSObject
+@property (nonatomic,strong) NSURLSessionTask * _Nullable task;
+@property (nonatomic,assign) PXNetWorkStatus status;///< default is PXNetWorkStatusUnknown
+
+- (instancetype)initWithTask:(NSURLSessionTask * _Nullable)task status:(PXNetWorkStatus)status;
+@end
 
