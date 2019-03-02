@@ -18,7 +18,7 @@ typedef NS_ENUM(NSUInteger,PXNetWorkStatus) {
 typedef enum {
     POST,
     GET
-}PXRequestMethod;
+}PXHttpMethod;
 
 typedef void(^requestCache)(id cacheObj);
 typedef void(^netStatusChange)(PXNetWorkStatus status);
@@ -95,7 +95,7 @@ typedef void(^requestProgress)(NSProgress *progress);
  @param failure 失败回调
  */
 + (PXURLSessionTask *)request:(NSString *)url
-                       method:(PXRequestMethod)method
+                       method:(PXHttpMethod)method
                        params:(nullable NSDictionary *)params
                       success:(nullable requestSuccess)success
                       failure:(nullable requestFailure)failure;
@@ -111,7 +111,7 @@ typedef void(^requestProgress)(NSProgress *progress);
  @param failure 失败回调
  */
 + (PXURLSessionTask *)request:(NSString *)url
-                       method:(PXRequestMethod)method
+                       method:(PXHttpMethod)method
                        params:(nullable NSDictionary *)params
                         cache:(nullable requestCache)cache
                       success:(nullable requestSuccess)success

@@ -21,7 +21,7 @@ static PXCache *instance;
     return instance;
 }
 
-- (NSString *)getCacheKey:(NSString *)URLString params:(NSDictionary *)params{
++ (NSString *)getCacheKey:(NSString *)URLString params:(NSDictionary *)params{
     if (params.count < 1 || params == nil || !params) {
         return URLString;
     }
@@ -30,20 +30,20 @@ static PXCache *instance;
     return [URLString stringByAppendingString:paramString];
 }
 
-- (void)clearAllCache{
-    [instance removeAllObjects];
++ (void)clearAllCache{
+    [[PXCache cache] removeAllObjects];
 }
 
-- (void)clearCacheWithKey:(NSString *)key{
-    [instance removeObjectForKey:key];
++ (void)clearCacheWithKey:(NSString *)key{
+    [[PXCache cache] removeObjectForKey:key];
 }
 
-- (void)cacheObject:(id)obj withKey:(NSString *)key{
-    [instance setObject:obj forKey:key];
++ (void)cacheObject:(id)obj withKey:(NSString *)key{
+    [[PXCache cache] setObject:obj forKey:key];
 }
 
-- (id)readObjectWithKey:(NSString *)key{
-    return [instance objectForKey:key];
++ (id)readObjectWithKey:(NSString *)key{
+    return [[PXCache cache] objectForKey:key];
 }
 
 @end

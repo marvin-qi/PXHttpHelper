@@ -18,7 +18,6 @@
 
 @interface PXHttpHelper ()
 @property (nonatomic,strong) AFHTTPSessionManager *manager;
-@property (nonatomic,strong) PXCache *mCache;
 @property (nonatomic,strong) NSMutableArray <NSURLSessionTask *>*mTaskSource;
 @property (nonatomic,assign) BOOL isLog;
 @end
@@ -45,7 +44,6 @@ static PXHttpHelper *_helper;
 }
 
 - (void)setupManager{
-    self.mCache = [PXCache cache];
     //开启网络监听
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     self.manager = [AFHTTPSessionManager manager];
@@ -67,9 +65,9 @@ static PXHttpHelper *_helper;
 
 + (PXURLSessionTask *)post:(NSString *)url params:(NSDictionary *)params cache:(requestCache)cache success:(requestSuccess)success failure:(requestFailure)failure{
     PXHttpHelper *helper = [PXHttpHelper helper];
-    NSString *cacheKey = [helper.mCache getCacheKey:url params:params];
+    NSString *cacheKey = [PXCache getCacheKey:url params:params];
     if (cache) {
-        id cacheObj = [helper.mCache readObjectWithKey:cacheKey];
+        id cacheObj = [PXCache readObjectWithKey:cacheKey];
         cache(cacheObj);
         [helper log:url params:params obj:cacheObj];
     }
@@ -78,7 +76,7 @@ static PXHttpHelper *_helper;
         __strong __typeof(weakHelper)helper = weakHelper;
         [helper.mTaskSource removeObject:task];
         [helper log:url params:params obj:responseObject];
-        if (cache) [helper.mCache cacheObject:responseObject withKey:cacheKey];
+        if (cache) [PXCache cacheObject:responseObject withKey:cacheKey];
         success?success(task, responseObject):nil;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -95,9 +93,9 @@ static PXHttpHelper *_helper;
 
 + (PXURLSessionTask *)get:(NSString *)url params:(NSDictionary *)params cache:(requestCache)cache success:(requestSuccess)success failure:(requestFailure)failure{
     PXHttpHelper *helper = [PXHttpHelper helper];
-    NSString *cacheKey = [helper.mCache getCacheKey:url params:params];
+    NSString *cacheKey = [PXCache getCacheKey:url params:params];
     if (cache) {
-        id cacheObj = [helper.mCache readObjectWithKey:cacheKey];
+        id cacheObj = [PXCache readObjectWithKey:cacheKey];
         cache(cacheObj);
         [helper log:url params:params obj:cacheObj];
     }
@@ -106,7 +104,7 @@ static PXHttpHelper *_helper;
         __strong __typeof(weakHelper)helper = weakHelper;
         [helper.mTaskSource removeObject:task];
         [helper log:url params:params obj:responseObject];
-        if (cache) [helper.mCache cacheObject:responseObject withKey:cacheKey];
+        if (cache) [PXCache cacheObject:responseObject withKey:cacheKey];
         success?success(task, responseObject):nil;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -122,7 +120,7 @@ static PXHttpHelper *_helper;
 }
 
 + (PXURLSessionTask *)request:(NSString *)url
-                       method:(PXRequestMethod)method
+                       method:(PXHttpMethod)method
                        params:(NSDictionary *)params
                       success:(requestSuccess)success
                       failure:(requestFailure)failure
@@ -131,7 +129,7 @@ static PXHttpHelper *_helper;
 }
 
 + (PXURLSessionTask *)request:(NSString *)url
-                       method:(PXRequestMethod)method
+                       method:(PXHttpMethod)method
                        params:(NSDictionary *)params
                         cache:(requestCache)cache
                       success:(requestSuccess)success
